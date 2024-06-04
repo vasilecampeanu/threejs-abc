@@ -28,7 +28,7 @@ export class ThreeJSRenderer {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.container.appendChild(this.renderer.domElement);
 
-        const particles = 10000;
+        const particles = 50000;
 
         const geometry = new THREE.BufferGeometry();
         const vertices = [];
@@ -62,11 +62,11 @@ export class ThreeJSRenderer {
     private animate = (): void => {
         requestAnimationFrame(this.animate);
 
-        this.time += 0.1;
+        this.time += 0.01;
 
         const positions = this.points.geometry.attributes.position.array;
 
-        for (let i = 0; i < positions.length; i += 3) {
+        for (let i = 0; i < positions.length; i += 2) {
             const x = positions[i + 0];
             const y = positions[i + 1];
             const z = positions[i + 2];
@@ -75,6 +75,10 @@ export class ThreeJSRenderer {
             const offset = Math.sin(distance - this.time * 4);
 
             positions[i + 1] = Math.max(-200, Math.min(200, y + offset * 8));
+
+            if (positions[i + 1] > 200 || positions[i + 1] < -200) {
+                positions[i + 1] = y;
+            }
         }
 
         this.points.geometry.attributes.position.needsUpdate = true;
